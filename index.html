@@ -728,37 +728,124 @@ function mostrarPuente() {
 
 function comenzarExperimento() {
 
-  const condiciones = [
-    "I1_AB",
-    "I1_BA",
-    "I2_AB",
-    "I2_BA",
-    "I3_AB",
-    "I3_BA"
-  ];
+  const condicionesElementales = true;
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="loading">
+
+      <p>
+        Preparando el estudio...
+      </p>
+
+    </div>
+
+  `;
+
+  const callbackName =
+    "asignacion_" +
+    Date.now();
+
+  const script =
+    document.createElement("script");
+
+  script.src =
+    API_URL +
+    "?action=asignar" +
+    "&session=" +
+    encodeURIComponent(sessionId) +
+    "&callback=" +
+    callbackName;
+
+  window[callbackName] =
+    function(data) {
+
+      // ---------------------------------------------
+      // Error del backend
+      // ---------------------------------------------
+
+      if (!data.ok) {
+
+        document.getElementById("app").innerHTML = `
+
+          <h2>
+            No se ha podido iniciar el estudio
+          </h2>
+
+          <p>
+            ${data.error}
+          </p>
+
+          <button
+            onclick="mostrarPuente()"
+          >
+            Volver a intentar
+          </button>
+
+        `;
+
+        cleanup();
+
+        return;
+      }
+
+      // ---------------------------------------------
+      // Guardamos la condición
+      // ---------------------------------------------
+
+      condicion =
+        data.condicion;
+
+      // ---------------------------------------------
+      // Empezamos por el primer escenario
+      // ---------------------------------------------
+
+      indiceEscenario = 0;
+
+      cleanup();
+
+      mostrarEscenario();
+
+    };
 
 
-  /*
-   * TEMPORALMENTE:
-   * elegimos una condición aleatoria.
-   *
-   * Después conectaremos esta parte con
-   * Apps Script para que el balance sea real.
-   */
+  script.onerror =
+    function() {
 
-  condicion =
-    condiciones[
-      Math.floor(
-        Math.random() *
-        condiciones.length
-      )
-    ];
+      document.getElementById("app").innerHTML = `
+
+        <h2>
+          No se ha podido conectar con el servidor
+        </h2>
+
+        <p>
+          Comprueba la conexión a Internet e inténtalo
+          de nuevo.
+        </p>
+
+        <button
+          onclick="mostrarPuente()"
+        >
+          Volver a intentar
+        </button>
+
+      `;
+
+      cleanup();
+
+    };
 
 
-  indiceEscenario = 0;
+  document.head.appendChild(script);
 
-  mostrarEscenario();
 
+  function cleanup() {
+
+    delete window[callbackName];
+
+    script.remove();
+
+  }
 }
 
 
