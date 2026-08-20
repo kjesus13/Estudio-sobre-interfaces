@@ -723,6 +723,12 @@ function mostrarPuente() {
       Comenzar
     </button>
 
+    <button
+  onclick="probarAsignacionDirecta()"
+>
+  Prueba técnica
+</button>
+
   `;
 }
 
@@ -849,6 +855,51 @@ function comenzarExperimento() {
     script.remove();
 
   }
+}
+
+
+function probarAsignacionDirecta() {
+
+  const callbackName =
+    "prueba_" + Date.now();
+
+  const script =
+    document.createElement("script");
+
+  script.src =
+    API_URL +
+    "?action=asignar" +
+    "&session=" +
+    encodeURIComponent(sessionId) +
+    "&callback=" +
+    callbackName;
+
+  window[callbackName] =
+    function(data) {
+
+      alert(
+        JSON.stringify(data)
+      );
+
+      delete window[callbackName];
+
+      script.remove();
+    };
+
+  script.onerror =
+    function() {
+
+      alert(
+        "La petición no ha podido salir del navegador."
+      );
+
+      delete window[callbackName];
+
+      script.remove();
+
+    };
+
+  document.head.appendChild(script);
 }
 
 
