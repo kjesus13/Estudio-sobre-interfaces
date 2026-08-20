@@ -677,6 +677,11 @@ async function guardarCuestionarioLocal() {
 
 function mostrarPuente() {
 
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
   document.getElementById("app").innerHTML = `
 
     <h1>
@@ -727,8 +732,6 @@ function mostrarPuente() {
    ====================================================== */
 
 function comenzarExperimento() {
-
-  const condicionesElementales = true;
 
   document.getElementById("app").innerHTML = `
 
