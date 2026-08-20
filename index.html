@@ -107,12 +107,27 @@
       margin: 0 auto 6px;
     }
 
+    .image-container {
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      margin-top: 22px;
+      margin-bottom: 30px;
+    }
+
     .image-container img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 10px;
-      margin: 20px 0 28px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 600px) {
+
+    .image-container {
+      width: calc(100% + 28px);
+      margin-left: -14px;
+    }
+
     }
 
     button {
@@ -939,6 +954,17 @@ function guardarEscenario() {
 
 function finalizarExperimento() {
 
+  sessionStorage.setItem(
+    "experimentoFinalizado",
+    "true"
+  );
+
+  history.pushState(
+    null,
+    "",
+    location.href
+  );
+
   document.getElementById("app").innerHTML = `
 
     <h1>
@@ -946,14 +972,59 @@ function finalizarExperimento() {
     </h1>
 
     <p>
-      Has completado esta parte del estudio.
+      Has completado correctamente el estudio.
     </p>
 
-    <button>
-      Finalizar
-    </button>
+    <p>
+      Ya puedes cerrar esta página.
+    </p>
 
   `;
+
+}
+
+
+window.addEventListener(
+  "popstate",
+  function() {
+
+    if (
+      sessionStorage.getItem(
+        "experimentoFinalizado"
+      ) === "true"
+    ) {
+
+      history.pushState(
+        null,
+        "",
+        location.href
+      );
+
+      mostrarFinalBloqueado();
+
+    }
+
+  }
+);
+
+function mostrarFinalBloqueado() {
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      Gracias por participar
+    </h1>
+
+    <p>
+      Has completado correctamente el estudio.
+    </p>
+
+    <p>
+      Ya puedes cerrar esta página.
+    </p>
+
+  `;
+
 }
 
 
@@ -961,8 +1032,20 @@ function finalizarExperimento() {
    INICIO
    ====================================================== */
 
-mostrarBienvenida();
+if (
+  sessionStorage.getItem(
+    "experimentoFinalizado"
+  ) === "true"
+) {
 
+  mostrarFinalBloqueado();
+
+} else {
+
+  mostrarBienvenida();
+
+}
+  
 </script>
 
 </body>
