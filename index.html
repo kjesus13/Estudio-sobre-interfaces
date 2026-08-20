@@ -108,24 +108,26 @@
     }
 
     .image-container {
-      width: calc(100% + 48px);
-      margin-left: -24px;
+      width: calc(100% + 72px);
+      margin-left: -36px;
       margin-top: 22px;
       margin-bottom: 30px;
+      border-top: 1px solid #CBD5E1;
+      border-bottom: 1px solid #CBD5E1;
     }
 
     .image-container img {
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 6px;
+      border-radius: 0;
     }
 
     @media (max-width: 600px) {
 
     .image-container {
-      width: calc(100% + 36px);
-      margin-left: -18px;
+      width: calc(100% + 54px);
+      margin-left: -27px;
     }
 
     }
@@ -591,6 +593,11 @@ function guardarCuestionarioLocal() {
 
 
   mostrarPuente();
+
+  window.scrollTo({
+  top: 0,
+  behavior: "smooth"
+});
 }
 
 
