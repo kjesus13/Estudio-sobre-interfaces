@@ -10,7 +10,9 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Prueba TFM</title>
+  <title>
+    Estudio sobre interfaces para la toma de decisiones financieras
+  </title>
 
   <style>
 
@@ -19,79 +21,136 @@
     }
 
     body {
-
       margin: 0;
-
       background: #F5F7FA;
-
       font-family:
         Arial,
         Helvetica,
         sans-serif;
-
       color: #1F2937;
     }
 
     .container {
-
       width: 100%;
-
-      max-width: 700px;
-
+      max-width: 760px;
       margin: 0 auto;
-
-      padding: 20px 16px 40px;
+      padding: 18px 14px 40px;
     }
 
     .card {
-
       background: #FFFFFF;
-
       border-radius: 16px;
-
-      padding: 28px;
-
+      padding: 24px;
       box-shadow:
         0 4px 18px
         rgba(0, 0, 0, 0.06);
     }
 
     h1 {
-
       margin-top: 0;
-
       font-size: 26px;
+      line-height: 1.25;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 21px;
+      line-height: 1.3;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .intro {
+      margin-bottom: 24px;
+    }
+
+    .question {
+      margin-top: 28px;
+    }
+
+    .question-title {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .option {
+      display: block;
+      padding: 9px 0;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .option input {
+      margin-right: 8px;
+    }
+
+    .scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .scale label {
+      flex: 1;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .scale input {
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      margin: 20px 0 28px;
     }
 
     button {
-
       width: 100%;
-
-      padding: 14px;
-
-      margin-top: 20px;
-
-      background: #2563EB;
-
-      color: white;
-
+      padding: 13px 18px;
+      margin-top: 26px;
       border: none;
-
       border-radius: 8px;
-
+      background: #2563EB;
+      color: #FFFFFF;
       font-size: 16px;
+      cursor: pointer;
     }
 
-    #resultado {
+    button:disabled {
+      opacity: 0.6;
+    }
 
-      margin-top: 20px;
+    .loading {
+      text-align: center;
+      padding: 30px 10px;
+      color: #64748B;
+    }
 
+    .info-box {
+      background: #EFF6FF;
+      border-radius: 10px;
       padding: 14px;
+      margin: 20px 0;
+      line-height: 1.5;
+    }
 
-      border-radius: 8px;
-
-      background: #F1F5F9;
-
+    .error {
+      background: #FEF2F2;
+      color: #991B1B;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 20px;
     }
 
   </style>
@@ -105,22 +164,7 @@
 
   <div class="card">
 
-    <h1>
-      Prueba de conexión
-    </h1>
-
-    <p>
-      Esta página está alojada en GitHub Pages.
-      Apps Script funciona como backend.
-    </p>
-
-    <button
-      onclick="probarConexion()"
-    >
-      Probar conexión
-    </button>
-
-    <div id="resultado"></div>
+    <div id="app"></div>
 
   </div>
 
@@ -129,69 +173,795 @@
 
 <script>
 
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzHglXr5umt_xV6vFsOLhRozPojW928Un9LmPP8BFdjuft6kic_J0Q9ZHS4E9-CMjhhew/exec";
+/* ======================================================
+   SESIÓN DEL PARTICIPANTE
+   ====================================================== */
+
+const sessionId =
+  "S-" +
+  crypto.randomUUID();
 
 
-function probarConexion() {
+/* ======================================================
+   ESTADO GENERAL
+   ====================================================== */
 
-  const callbackName =
-    "respuesta_" +
-    Date.now();
+let datosParticipante = {};
 
-  const script =
-    document.createElement("script");
+let condicion = null;
 
-  script.src =
-    API_URL +
-    "?action=ping" +
-    "&callback=" +
-    callbackName;
+let indiceEscenario = 0;
 
-  window[callbackName] =
-    function(data) {
-
-      const resultado =
-        document.getElementById(
-          "resultado"
-        );
-
-      if (data.ok) {
-
-        resultado.textContent =
-          data.message;
-
-      } else {
-
-        resultado.textContent =
-          "Error: " +
-          data.error;
-      }
-
-      delete window[callbackName];
-
-      script.remove();
-    };
+let inicioEscenario = null;
 
 
-  script.onerror =
-    function() {
+/* ======================================================
+   MOSTRAR BIENVENIDA
+   ====================================================== */
 
-      document.getElementById(
-        "resultado"
-      ).textContent =
-        "No se ha podido conectar con Apps Script.";
+function mostrarBienvenida() {
 
-      delete window[callbackName];
+  document.getElementById("app").innerHTML = `
 
-      script.remove();
+    <h1>
+      Estudio sobre interfaces para la toma
+      de decisiones financieras
+    </h1>
 
-    };
+    <p>
+      Este estudio analiza cómo diferentes formas
+      de presentar información pueden influir en
+      la comprensión y la toma de decisiones
+      financieras.
+    </p>
+
+    <p>
+      No es necesario tener conocimientos avanzados
+      de finanzas. La participación tendrá una duración
+      aproximada de 10 minutos.
+    </p>
+
+    <div class="info-box">
+      Tu participación es anónima y las respuestas
+      se utilizarán únicamente con fines de investigación.
+    </div>
+
+    <button onclick="mostrarCuestionario()">
+      Comenzar
+    </button>
+
+  `;
+}
 
 
-  document.head.appendChild(script);
+/* ======================================================
+   CUESTIONARIO INICIAL
+   ====================================================== */
+
+function mostrarCuestionario() {
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      Cuestionario inicial
+    </h1>
+
+    <p>
+      Las siguientes preguntas permiten conocer
+      algunas características generales de los participantes.
+      No hay respuestas correctas o incorrectas.
+    </p>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        1. ¿En qué intervalo de edad te encuentras?
+      </div>
+
+      ${crearOpciones(
+        "edad",
+        [
+          "18–24 años",
+          "25–34 años",
+          "35–44 años",
+          "45–54 años",
+          "55 años o más",
+          "Prefiero no responder"
+        ]
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        2. ¿Cuál de las siguientes opciones describe
+        mejor tu experiencia realizando inversiones?
+      </div>
+
+      ${crearOpciones(
+        "experiencia",
+        [
+          "Nunca he invertido.",
+          "He invertido una vez o de forma puntual.",
+          "He realizado inversiones en varias ocasiones.",
+          "Invierto actualmente.",
+          "Prefiero no responder."
+        ]
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        3. ¿Con qué frecuencia consultas información
+        sobre finanzas personales o inversiones?
+      </div>
+
+      ${crearOpciones(
+        "frecuencia",
+        [
+          "Nunca",
+          "Rara vez",
+          "Algunas veces",
+          "Frecuentemente",
+          "Muy frecuentemente"
+        ]
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        4. ¿Cómo valorarías tus conocimientos
+        sobre finanzas personales e inversión?
+      </div>
+
+      ${crearEscala("conocimiento")}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        5. Prefiero una opción con menor riesgo aunque
+        su posible rentabilidad sea menor.
+      </div>
+
+      ${crearEscala("p5")}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        6. Estoy dispuesto/a a asumir más riesgo si existe
+        la posibilidad de obtener una mayor rentabilidad.
+      </div>
+
+      ${crearEscala("p6")}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        7. Cuando tengo que elegir entre varias alternativas,
+        suelo decantarme por la opción más segura.
+      </div>
+
+      ${crearEscala("p7")}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        8. Ante una decisión importante, prefiero asumir
+        cierta incertidumbre si puede mejorar el resultado.
+      </div>
+
+      ${crearEscala("p8")}
+
+    </div>
+
+
+    <button
+      onclick="guardarCuestionarioLocal()"
+    >
+      Continuar
+    </button>
+
+  `;
+}
+
+
+/* ======================================================
+   CREAR OPCIONES
+   ====================================================== */
+
+function crearOpciones(
+  nombre,
+  opciones
+) {
+
+  return opciones
+    .map(
+      opcion => `
+
+        <label class="option">
+
+          <input
+            type="radio"
+            name="${nombre}"
+            value="${opcion}"
+          >
+
+          ${opcion}
+
+        </label>
+
+      `
+    )
+    .join("");
+}
+
+
+/* ======================================================
+   CREAR ESCALA 1–5
+   ====================================================== */
+
+function crearEscala(
+  nombre
+) {
+
+  let html =
+    `<div class="scale">`;
+
+  for (
+    let i = 1;
+    i <= 5;
+    i++
+  ) {
+
+    html += `
+
+      <label>
+
+        <input
+          type="radio"
+          name="${nombre}"
+          value="${i}"
+        >
+
+        ${i}
+
+      </label>
+
+    `;
+  }
+
+  html += `
+    </div>
+  `;
+
+  return html;
+}
+
+
+/* ======================================================
+   LEER RADIO
+   ====================================================== */
+
+function leerRadio(
+  nombre
+) {
+
+  const elemento =
+    document.querySelector(
+      `input[name="${nombre}"]:checked`
+    );
+
+  return elemento
+    ? elemento.value
+    : null;
+}
+
+
+/* ======================================================
+   GUARDAR CUESTIONARIO
+   SOLO LOCALMENTE DE MOMENTO
+   ====================================================== */
+
+function guardarCuestionarioLocal() {
+
+  const campos = [
+    "edad",
+    "experiencia",
+    "frecuencia",
+    "conocimiento",
+    "p5",
+    "p6",
+    "p7",
+    "p8"
+  ];
+
+  const respuestas = {};
+
+  for (
+    const campo of campos
+  ) {
+
+    const valor =
+      leerRadio(campo);
+
+    if (!valor) {
+
+      alert(
+        "Por favor, responde a todas las preguntas antes de continuar."
+      );
+
+      return;
+    }
+
+    respuestas[campo] =
+      valor;
+  }
+
+
+  datosParticipante =
+    respuestas;
+
+
+  mostrarPuente();
+}
+
+
+/* ======================================================
+   PÁGINA PUENTE
+   ====================================================== */
+
+function mostrarPuente() {
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      A continuación comienza la segunda parte del estudio
+    </h1>
+
+    <p>
+      En las siguientes pantallas encontrarás dos casos
+      ficticios relacionados con situaciones de inversión
+      personal.
+    </p>
+
+    <p>
+      En cada caso se mostrará el perfil financiero de
+      una persona junto con distintas alternativas entre
+      las que deberá tomar una decisión.
+    </p>
+
+    <p>
+      Observa con atención la información presentada y
+      responde a las preguntas que aparecerán después
+      de cada caso.
+    </p>
+
+    <p>
+      En la elección final no existen respuestas correctas
+      o incorrectas; nos interesa conocer cómo interpretas
+      la información y qué decisión tomarías.
+    </p>
+
+    <div class="info-box">
+      El proceso completo tendrá una duración aproximada
+      de 10 minutos.
+    </div>
+
+    <button
+      onclick="comenzarExperimento()"
+    >
+      Comenzar
+    </button>
+
+  `;
+}
+
+
+/* ======================================================
+   ASIGNACIÓN LOCAL
+   ====================================================== */
+
+function comenzarExperimento() {
+
+  const condiciones = [
+    "I1_AB",
+    "I1_BA",
+    "I2_AB",
+    "I2_BA",
+    "I3_AB",
+    "I3_BA"
+  ];
+
+
+  /*
+   * TEMPORALMENTE:
+   * elegimos una condición aleatoria.
+   *
+   * Después conectaremos esta parte con
+   * Apps Script para que el balance sea real.
+   */
+
+  condicion =
+    condiciones[
+      Math.floor(
+        Math.random() *
+        condiciones.length
+      )
+    ];
+
+
+  indiceEscenario = 0;
+
+  mostrarEscenario();
 
 }
+
+
+/* ======================================================
+   CONFIGURACIÓN DE ESCENARIOS
+   ====================================================== */
+
+const escenarios = {
+
+  "A": {
+
+    titulo:
+      "Caso ficticio A — Primera inversión",
+
+    contexto:
+      "Imagina que has conseguido ahorrar y deseas realizar tu primera inversión con el objetivo de comprar una vivienda.",
+
+    imagen: {
+
+      I1:
+        "1A.jpg",
+
+      I2:
+        "2A.jpg",
+
+      I3:
+        "3A.jpg"
+
+    },
+
+    opciones: [
+
+      "Opción A",
+      "Opción B",
+      "Opción C"
+
+    ]
+
+  },
+
+
+  "B": {
+
+    titulo:
+      "Caso ficticio B — Revisión de una inversión",
+
+    contexto:
+      "Imagina que ya realizaste una inversión y ahora debes decidir qué hacer con ella para complementar tu jubilación.",
+
+    imagen: {
+
+      I1:
+        "1B.jpg",
+
+      I2:
+        "2B.jpg",
+
+      I3:
+        "3B.jpg"
+
+    },
+
+    opciones: [
+
+      "Mantener",
+      "Cambiar",
+      "Vender"
+
+    ]
+
+  }
+
+};
+
+
+/* ======================================================
+   MOSTRAR ESCENARIO
+   ====================================================== */
+
+function mostrarEscenario() {
+
+  const partes =
+    condicion.split("_");
+
+  const interfaz =
+    partes[0];
+
+  const orden =
+    partes[1];
+
+
+  const secuencia =
+    orden === "AB"
+      ? ["A", "B"]
+      : ["B", "A"];
+
+
+  if (
+    indiceEscenario >=
+    secuencia.length
+  ) {
+
+    finalizarExperimento();
+
+    return;
+  }
+
+
+  const escenario =
+    secuencia[indiceEscenario];
+
+
+  const datos =
+    escenarios[escenario];
+
+
+  inicioEscenario =
+    Date.now();
+
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      ${datos.titulo}
+    </h1>
+
+    <p>
+      ${datos.contexto}
+    </p>
+
+    <div
+      class="image-container"
+    >
+
+      <img
+        src="${datos.imagen[interfaz]}"
+        alt="Interfaz del caso ficticio"
+      >
+
+    </div>
+
+    <div id="preguntas"></div>
+
+    <button
+      onclick="guardarEscenario()"
+    >
+      Continuar
+    </button>
+
+  `;
+
+
+  mostrarPreguntas(
+    escenario,
+    datos.opciones
+  );
+
+}
+
+
+/* ======================================================
+   PREGUNTAS ESCENARIO
+   ====================================================== */
+
+function mostrarPreguntas(
+  escenario,
+  opciones
+) {
+
+  const decision =
+    escenario === "A"
+      ? "¿Qué opción elegirías en este caso?"
+      : "¿Qué harías en esta situación?";
+
+
+  document.getElementById(
+    "preguntas"
+  ).innerHTML = `
+
+    <div class="question">
+
+      <div class="question-title">
+        ¿Cuál de las tres opciones ofrece la mayor
+        rentabilidad anual?
+      </div>
+
+      ${crearOpciones(
+        "comprension",
+        opciones
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        Según el perfil mostrado, ¿qué opción consideras
+        que se adapta mejor al caso?
+      </div>
+
+      ${crearOpciones(
+        "interpretacion",
+        opciones
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        ${decision}
+      </div>
+
+      ${crearOpciones(
+        "decision",
+        opciones
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        ¿Qué grado de confianza tienes en tu decisión?
+      </div>
+
+      ${crearEscala(
+        "confianza"
+      )}
+
+    </div>
+
+
+    <div class="question">
+
+      <div class="question-title">
+        ¿Cuánto esfuerzo mental te ha supuesto tomar
+        esta decisión?
+      </div>
+
+      ${crearEscala(
+        "esfuerzo"
+      )}
+
+    </div>
+
+  `;
+}
+
+
+/* ======================================================
+   GUARDAR ESCENARIO
+   ====================================================== */
+
+function guardarEscenario() {
+
+  const respuestas = {
+
+    escenario:
+      condicion.endsWith(
+        "_AB"
+      )
+        ? "AB"
+        : "BA",
+
+    comprension:
+      leerRadio("comprension"),
+
+    interpretacion:
+      leerRadio("interpretacion"),
+
+    decision:
+      leerRadio("decision"),
+
+    confianza:
+      leerRadio("confianza"),
+
+    esfuerzo:
+      leerRadio("esfuerzo"),
+
+    tiempo:
+      Math.round(
+        (
+          Date.now() -
+          inicioEscenario
+        ) /
+        1000
+      )
+
+  };
+
+
+  if (
+    !respuestas.comprension ||
+    !respuestas.interpretacion ||
+    !respuestas.decision ||
+    !respuestas.confianza ||
+    !respuestas.esfuerzo
+  ) {
+
+    alert(
+      "Por favor, responde a todas las preguntas antes de continuar."
+    );
+
+    return;
+  }
+
+
+  indiceEscenario++;
+
+  mostrarEscenario();
+
+}
+
+
+/* ======================================================
+   FINAL
+   ====================================================== */
+
+function finalizarExperimento() {
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      Gracias por participar
+    </h1>
+
+    <p>
+      Has completado esta parte del estudio.
+    </p>
+
+    <button>
+      Finalizar
+    </button>
+
+  `;
+}
+
+
+/* ======================================================
+   INICIO
+   ====================================================== */
+
+mostrarBienvenida();
 
 </script>
 
