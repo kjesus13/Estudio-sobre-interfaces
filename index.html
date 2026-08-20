@@ -194,9 +194,23 @@
    SESIÓN DEL PARTICIPANTE
    ====================================================== */
 
-const sessionId =
-  "S-" +
-  crypto.randomUUID();
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzHglXr5umt_xV6vFsOLhRozPojW928Un9LmPP8BFdjuft6kic_J0Q9ZHS4E9-CMjhhew/exec";
+
+let sessionId =
+  sessionStorage.getItem("tfm_session_id");
+
+if (!sessionId) {
+
+  sessionId =
+    "S-" +
+    crypto.randomUUID();
+
+  sessionStorage.setItem(
+    "tfm_session_id",
+    sessionId
+  );
+}
 
 
 /* ======================================================
@@ -550,7 +564,7 @@ function leerRadio(
    SOLO LOCALMENTE DE MOMENTO
    ====================================================== */
 
-function guardarCuestionarioLocal() {
+async function guardarCuestionarioLocal() {
 
   const campos = [
     "edad",
@@ -565,9 +579,7 @@ function guardarCuestionarioLocal() {
 
   const respuestas = {};
 
-  for (
-    const campo of campos
-  ) {
+  for (const campo of campos) {
 
     const valor =
       leerRadio(campo);
@@ -581,23 +593,81 @@ function guardarCuestionarioLocal() {
       return;
     }
 
-    respuestas[campo] =
-      valor;
+    respuestas[campo] = valor;
   }
 
-
-  datosParticipante =
-    respuestas;
-
+  // Consentimiento
   respuestas.consentimiento = "Sí";
 
+  // Guardamos localmente
+  datosParticipante = respuestas;
 
-  mostrarPuente();
+  // Mostrar estado de carga
+  document.getElementById("app").innerHTML = `
 
-  window.scrollTo({
-  top: 0,
-  behavior: "smooth"
-});
+    <div class="loading">
+
+      <p>
+        Guardando tus respuestas...
+      </p>
+
+    </div>
+
+  `;
+
+  try {
+
+    await fetch(
+      API_URL,
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+
+          tipo:
+            "cuestionario",
+
+          sessionId:
+            sessionId,
+
+          ...respuestas
+
+        })
+      }
+    );
+
+    // -----------------------------------------
+    // Una vez enviado:
+    // mostrar puente
+    // -----------------------------------------
+
+    mostrarPuente();
+
+  }
+
+  catch (error) {
+
+    document.getElementById("app").innerHTML = `
+
+      <h2>
+        No se han podido guardar las respuestas
+      </h2>
+
+      <p>
+        Comprueba tu conexión a Internet e inténtalo de nuevo.
+      </p>
+
+      <button onclick="mostrarCuestionario()">
+        Volver al cuestionario
+      </button>
+
+    `;
+
+  }
 }
 
 
