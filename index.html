@@ -1311,6 +1311,89 @@ async function guardarNASA_TLX() {
   }
 }
 
+/* ======================================================
+   SUS (System Usability Scale)
+   ====================================================== */
+
+function mostrarSUS() {
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  const preguntas = [
+
+    "Creo que utilizaría esta interfaz con frecuencia.",
+
+    "Encontré la interfaz innecesariamente compleja.",
+
+    "Me pareció fácil utilizar la interfaz.",
+
+    "Creo que necesitaría ayuda de una persona técnica para poder utilizar esta interfaz.",
+
+    "Las distintas funciones de la interfaz estaban bien integradas.",
+
+    "Encontré demasiadas inconsistencias en la interfaz.",
+
+    "Creo que la mayoría de las personas aprenderían a utilizar esta interfaz rápidamente.",
+
+    "Me pareció muy complicada de utilizar.",
+
+    "Me sentí muy seguro/a utilizando la interfaz.",
+
+    "Necesitaría aprender muchas cosas antes de poder utilizar esta interfaz."
+  ];
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      Evaluación final
+    </h1>
+
+    <p>
+      Indica hasta qué punto estás de acuerdo o en desacuerdo
+      con cada afirmación.
+    </p>
+
+    ${preguntas
+      .map(
+        (pregunta, i) => `
+
+          <div class="question">
+
+            <div class="question-title">
+              ${i + 1}. ${pregunta}
+            </div>
+
+            ${crearOpciones(
+              "sus_" + (i + 1),
+              [
+                "1 — Totalmente en desacuerdo",
+                "2 — En desacuerdo",
+                "3 — Neutral",
+                "4 — De acuerdo",
+                "5 — Totalmente de acuerdo"
+              ]
+            )}
+
+          </div>
+
+        `
+      )
+      .join("")}
+
+    <button
+      onclick="guardarSUS()"
+    >
+      Finalizar estudio
+    </button>
+
+  `;
+}
+
+async function
+
   
 
 /* ======================================================
