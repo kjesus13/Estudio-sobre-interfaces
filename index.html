@@ -225,6 +225,8 @@ let indiceEscenario = 0;
 
 let inicioEscenario = null;
 
+let escenarioActual = null;
+
 
 /* ======================================================
    MOSTRAR BIENVENIDA
@@ -322,6 +324,12 @@ function iniciarCuestionario() {
    ====================================================== */
 
 function mostrarCuestionario() {
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
 
   document.getElementById("app").innerHTML = `
 
@@ -723,12 +731,6 @@ function mostrarPuente() {
       Comenzar
     </button>
 
-    <button
-  onclick="probarAsignacionDirecta()"
->
-  Prueba técnica
-</button>
-
   `;
 }
 
@@ -913,6 +915,8 @@ function mostrarEscenario() {
   const escenario =
     secuencia[indiceEscenario];
 
+  escenarioActual = escenario; // "A" o "B"
+
 
   const datos =
     escenarios[escenario];
@@ -1061,100 +1065,92 @@ function mostrarPreguntas(
    GUARDAR ESCENARIO
    ====================================================== */
 
-function guardarEscenario() {
+async function guardarEscenario() {
 
-  const respuestas = {
+  const comprension = leerRadio("comprension");
+  const interpretacion = leerRadio("interpretacion");
+  const decision = leerRadio("decision");
+  const confianza = leerRadio("confianza");
+  const esfuerzo = leerRadio("esfuerzo");
 
-    escenario:
-      condicion.endsWith(
-        "_AB"
-      )
-        ? "AB"
-        : "BA",
-
-    comprension:
-      leerRadio("comprension"),
-
-    interpretacion:
-      leerRadio("interpretacion"),
-
-    decision:
-      leerRadio("decision"),
-
-    confianza:
-      leerRadio("confianza"),
-
-    esfuerzo:
-      leerRadio("esfuerzo"),
-
-    tiempo:
-      Math.round(
-        (
-          Date.now() -
-          inicioEscenario
-        ) /
-        1000
-      )
-
-  };
-
-
-  if (
-    !respuestas.comprension ||
-    !respuestas.interpretacion ||
-    !respuestas.decision ||
-    !respuestas.confianza ||
-    !respuestas.esfuerzo
-  ) {
-
-    alert(
-      "Por favor, responde a todas las preguntas antes de continuar."
-    );
-
+  if (!comprension || !interpretacion || !decision || !confianza || !esfuerzo) {
+    alert("Por favor, responde a todas las preguntas antes de continuar.");
     return;
   }
 
+  const tiempo = Math.round((Date.now() - inicioEscenario) / 1000);
+  const sufijo = escenarioActual; // "A" o "B"
+
+  const payload = {
+    tipo: "escenario",
+    sessionId: sessionId
+  };
+
+  payload["tiempo" + sufijo] = tiempo;
+  payload["comprension" + sufijo] = comprension;
+  payload["interpretacion" + sufijo] = interpretacion;
+  payload["decision" + sufijo] = decision;
+  payload["confianza" + sufijo] = confianza;
+  payload["esfuerzo" + sufijo] = esfuerzo;
+
+  // Deshabilita el botón para evitar doble envío
+  const boton = document.querySelector("button[onclick='guardarEscenario()']");
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = "Guardando...";
+  }
+
+  try {
+
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+
+  } catch (error) {
+
+    alert("No se ha podido guardar tu respuesta. Comprueba tu conexión e inténtalo de nuevo.");
+    if (boton) {
+      boton.disabled = false;
+      boton.textContent = "Continuar";
+    }
+    return;
+  }
 
   indiceEscenario++;
-
   mostrarEscenario();
-
 }
-
 
 /* ======================================================
    FINAL
    ====================================================== */
 
-function finalizarExperimento() {
+async function finalizarExperimento() {
 
-  sessionStorage.setItem(
-    "experimentoFinalizado",
-    "true"
-  );
+  sessionStorage.setItem("experimentoFinalizado", "true");
+  history.pushState(null, "", location.href);
 
-  history.pushState(
-    null,
-    "",
-    location.href
-  );
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        sessionId: sessionId,
+        estado: "Completado"
+      })
+    });
+  } catch (error) {
+    // No bloqueamos el mensaje de agradecimiento aunque falle
+  }
 
   document.getElementById("app").innerHTML = `
-
-    <h1>
-      Gracias por participar
-    </h1>
-
-    <p>
-      Has completado correctamente el estudio.
-    </p>
-
-    <p>
-      Ya puedes cerrar esta página.
-    </p>
-
+    <h1>Gracias por participar</h1>
+    <p>Has completado correctamente el estudio.</p>
+    <p>Ya puedes cerrar esta página.</p>
   `;
-
 }
 
 
