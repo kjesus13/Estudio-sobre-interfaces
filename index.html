@@ -1392,9 +1392,71 @@ function mostrarSUS() {
   `;
 }
 
-async function
+async function guardarSUS() {
 
-  
+  const valores = [];
+
+  for (let i = 1; i <= 10; i++) {
+
+    const valor = leerRadio("sus_" + i);
+
+    if (!valor) {
+      alert("Por favor, responde a todas las afirmaciones antes de finalizar.");
+      return;
+    }
+
+    valores.push(Number(valor.split(" ")[0]));
+  }
+
+  /*
+   * Cálculo SUS
+   * Preguntas impares: respuesta - 1
+   * Preguntas pares: 5 - respuesta
+   */
+
+  let suma = 0;
+
+  for (let i = 0; i < 10; i++) {
+
+    if (i % 2 === 0) {
+      suma += valores[i] - 1;
+    } else {
+      suma += 5 - valores[i];
+    }
+  }
+
+  const sus = Number((suma * 2.5).toFixed(2));
+
+  document.getElementById("app").innerHTML = `
+    <div class="loading"><p>Guardando evaluación...</p></div>
+  `;
+
+  try {
+
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        tipo: "sus",
+        sessionId: sessionId,
+        sus: sus,
+        estado: "Completado"
+      })
+    });
+
+    finalizarExperimento();
+
+  } catch (error) {
+
+    document.getElementById("app").innerHTML = `
+      <h2>No se ha podido finalizar el estudio</h2>
+      <p>Comprueba tu conexión a Internet e inténtalo de nuevo.</p>
+      <button onclick="mostrarSUS()">Volver a intentar</button>
+    `;
+  }
+}
+
 
 /* ======================================================
    FINAL
