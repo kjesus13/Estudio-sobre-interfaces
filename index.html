@@ -737,169 +737,69 @@ function mostrarPuente() {
    ASIGNACIÓN LOCAL
    ====================================================== */
 
-function comenzarExperimento() {
+async function comenzarExperimento() {
 
   document.getElementById("app").innerHTML = `
-
     <div class="loading">
-
-      <p>
-        Preparando el estudio...
-      </p>
-
+      <p>Preparando el estudio...</p>
     </div>
-
   `;
 
-  const callbackName =
-    "asignacion_" +
-    Date.now();
+  try {
 
-  const script =
-    document.createElement("script");
+    const response = await fetch(
+      API_URL +
+      "?action=asignar&session=" +
+      encodeURIComponent(sessionId)
+    );
 
-  script.src =
-    API_URL +
-    "?action=asignar" +
-    "&session=" +
-    encodeURIComponent(sessionId) +
-    "&callback=" +
-    callbackName;
+    const data = await response.json();
 
-  window[callbackName] =
-    function(data) {
-
-      // ---------------------------------------------
-      // Error del backend
-      // ---------------------------------------------
-
-      if (!data.ok) {
-
-        document.getElementById("app").innerHTML = `
-
-          <h2>
-            No se ha podido iniciar el estudio
-          </h2>
-
-          <p>
-            ${data.error}
-          </p>
-
-          <button
-            onclick="mostrarPuente()"
-          >
-            Volver a intentar
-          </button>
-
-        `;
-
-        cleanup();
-
-        return;
-      }
-
-      // ---------------------------------------------
-      // Guardamos la condición
-      // ---------------------------------------------
-
-      condicion =
-        data.condicion;
-
-      // ---------------------------------------------
-      // Empezamos por el primer escenario
-      // ---------------------------------------------
-
-      indiceEscenario = 0;
-
-      cleanup();
-
-      mostrarEscenario();
-
-    };
-
-
-  script.onerror =
-    function() {
+    if (!data.ok) {
 
       document.getElementById("app").innerHTML = `
-
-        <h2>
-          No se ha podido conectar con el servidor
-        </h2>
-
-        <p>
-          Comprueba la conexión a Internet e inténtalo
-          de nuevo.
-        </p>
-
-        <button
-          onclick="mostrarPuente()"
-        >
-          Volver a intentar
-        </button>
-
+        <h2>No se ha podido iniciar el estudio</h2>
+        <p>${data.error}</p>
+        <button onclick="mostrarPuente()">Volver a intentar</button>
       `;
 
-      cleanup();
+      return;
+    }
 
-    };
+    condicion = data.condicion;
+    indiceEscenario = 0;
 
+    mostrarEscenario();
 
-  document.head.appendChild(script);
+  } catch (error) {
 
-
-  function cleanup() {
-
-    delete window[callbackName];
-
-    script.remove();
-
+    document.getElementById("app").innerHTML = `
+      <h2>No se ha podido conectar con el servidor</h2>
+      <p>Comprueba la conexión a Internet e inténtalo de nuevo.</p>
+      <button onclick="mostrarPuente()">Volver a intentar</button>
+    `;
   }
 }
 
 
-function probarAsignacionDirecta() {
+async function probarAsignacionDirecta() {
 
-  const callbackName =
-    "prueba_" + Date.now();
+  try {
 
-  const script =
-    document.createElement("script");
+    const response = await fetch(
+      API_URL +
+      "?action=asignar&session=" +
+      encodeURIComponent(sessionId)
+    );
 
-  script.src =
-    API_URL +
-    "?action=asignar" +
-    "&session=" +
-    encodeURIComponent(sessionId) +
-    "&callback=" +
-    callbackName;
+    const data = await response.json();
 
-  window[callbackName] =
-    function(data) {
+    alert(JSON.stringify(data));
 
-      alert(
-        JSON.stringify(data)
-      );
+  } catch (error) {
 
-      delete window[callbackName];
-
-      script.remove();
-    };
-
-  script.onerror =
-    function() {
-
-      alert(
-        "La petición no ha podido salir del navegador."
-      );
-
-      delete window[callbackName];
-
-      script.remove();
-
-    };
-
-  document.head.appendChild(script);
+    alert("Error de red: " + error.message);
+  }
 }
 
 
