@@ -906,8 +906,8 @@ function mostrarEscenario() {
     secuencia.length
   ) {
 
-    finalizarExperimento();
-
+  mostrarNASA_TLX();
+    
     return;
   }
 
@@ -1122,6 +1122,196 @@ async function guardarEscenario() {
   indiceEscenario++;
   mostrarEscenario();
 }
+
+/* ======================================================
+   NASA-TLX (RAW)
+   ====================================================== */
+
+let slidersInteractuados = new Set();
+
+function mostrarNASA_TLX() {
+
+  slidersInteractuados = new Set();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  document.getElementById("app").innerHTML = `
+
+    <h1>
+      Evaluación de la carga de trabajo
+    </h1>
+
+    <p>
+      Piensa en la actividad que acabas de realizar
+      y valora cómo fue para ti.
+    </p>
+
+    <div class="question">
+      <div class="question-title">1. Demanda mental</div>
+      <p>¿Cuánta actividad mental y perceptiva te exigió la tarea?</p>
+      ${crearEscala100("tlx_mental")}
+    </div>
+
+    <div class="question">
+      <div class="question-title">2. Demanda física</div>
+      <p>¿Cuánta actividad física te exigió la tarea?</p>
+      ${crearEscala100("tlx_fisica")}
+    </div>
+
+    <div class="question">
+      <div class="question-title">3. Demanda temporal</div>
+      <p>¿Cuánta presión temporal sentiste durante la tarea?</p>
+      ${crearEscala100("tlx_tiempo")}
+    </div>
+
+    <div class="question">
+      <div class="question-title">4. Rendimiento</div>
+      <p>¿Hasta qué punto consideras que tu rendimiento durante la tarea fue satisfactorio?</p>
+      ${crearEscala100("tlx_rendimiento")}
+    </div>
+
+    <div class="question">
+      <div class="question-title">5. Esfuerzo</div>
+      <p>¿Cuánto esfuerzo mental y físico tuviste que realizar para alcanzar tu nivel de rendimiento?</p>
+      ${crearEscala100("tlx_esfuerzo")}
+    </div>
+
+    <div class="question">
+      <div class="question-title">6. Frustración</div>
+      <p>¿Hasta qué punto te sentiste inseguro/a, desanimado/a, irritado/a o satisfecho/a durante la tarea?</p>
+      ${crearEscala100("tlx_frustracion")}
+    </div>
+
+    <button onclick="guardarNASA_TLX()">
+      Continuar
+    </button>
+
+  `;
+}
+
+function crearEscala100(nombre) {
+
+  return `
+
+    <div style="margin-top: 12px;">
+
+      <input
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value="50"
+        id="${nombre}"
+        style="width: 100%;"
+      >
+
+      <div style="
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #64748B;
+        margin-top: 6px;
+      ">
+        <span>0 — Muy bajo</span>
+        <span>Valor: <strong id="${nombre}_valor">Sin ajustar</strong></span>
+        <span>100 — Muy alto</span>
+      </div>
+
+    </div>
+
+  `;
+}
+
+document.addEventListener("input", function(event) {
+
+  if (event.target.matches('input[type="range"]')) {
+
+    const id = event.target.id;
+
+    slidersInteractuados.add(id);
+
+    const valor = document.getElementById(id + "_valor");
+
+    if (valor) {
+      valor.textContent = event.target.value;
+    }
+  }
+
+});
+
+async function guardarNASA_TLX() {
+
+  const nombres = [
+    "tlx_mental",
+    "tlx_fisica",
+    "tlx_tiempo",
+    "tlx_rendimiento",
+    "tlx_esfuerzo",
+    "tlx_frustracion"
+  ];
+
+  const faltantes = nombres.filter(
+    nombre => !slidersInteractuados.has(nombre)
+  );
+
+  if (faltantes.length > 0) {
+    alert("Por favor, ajusta todas las barras antes de continuar.");
+    return;
+  }
+
+  const valores = {};
+
+  nombres.forEach(nombre => {
+    valores[nombre] = Number(
+      document.getElementById(nombre).value
+    );
+  });
+
+  const media = nombres.reduce(
+    (suma, nombre) => suma + valores[nombre], 0
+  ) / nombres.length;
+
+  const nasaTLX = Number(media.toFixed(2));
+
+  document.getElementById("app").innerHTML = `
+    <div class="loading"><p>Guardando evaluación...</p></div>
+  `;
+
+  try {
+
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        tipo: "nasa_tlx",
+        sessionId: sessionId,
+        tlxMental: valores.tlx_mental,
+        tlxFisica: valores.tlx_fisica,
+        tlxTiempo: valores.tlx_tiempo,
+        tlxRendimiento: valores.tlx_rendimiento,
+        tlxEsfuerzo: valores.tlx_esfuerzo,
+        tlxFrustracion: valores.tlx_frustracion,
+        nasaTLX: nasaTLX
+      })
+    });
+
+    mostrarSUS();
+
+  } catch (error) {
+
+    document.getElementById("app").innerHTML = `
+      <h2>No se ha podido guardar la evaluación</h2>
+      <p>Comprueba tu conexión a Internet e inténtalo de nuevo.</p>
+      <button onclick="mostrarNASA_TLX()">Volver a intentar</button>
+    `;
+  }
+}
+
+  
 
 /* ======================================================
    FINAL
