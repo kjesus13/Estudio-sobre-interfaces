@@ -559,15 +559,15 @@ function crearOpciones(
 
     </div>
 
-    <div style="
+        <div style="
       display: flex;
       justify-content: space-between;
       font-size: 12px;
       color: #64748B;
       margin-top: 4px;
     ">
-      <span>Totalmente en desacuerdo</span>
-      <span>Totalmente de acuerdo</span>
+      <span style="max-width: 70px;">Totalmente<br>en desacuerdo</span>
+      <span style="max-width: 70px; text-align: right;">Totalmente<br>de acuerdo</span>
     </div>
 
   `;
@@ -747,6 +747,37 @@ async function guardarCuestionarioLocal() {
 
       document.getElementById("app").innerHTML = `
 
+      <h2>
+        No se han podido guardar las respuestas
+      </h2>
+
+      <p>
+        Comprueba tu conexión a Internet e inténtalo de nuevo.
+      </p>
+
+      <button onclick="mostrarCuestionario()">
+        Volver al cuestionario
+      </button>
+
+    `;
+
+  }
+}
+
+
+/* ======================================================
+   PÁGINA PUENTE
+   ====================================================== */
+
+function mostrarPuente() {
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+    document.getElementById("app").innerHTML = `
+
     <h1>
       A continuación comienza la segunda parte del estudio
     </h1>
@@ -775,64 +806,6 @@ async function guardarCuestionarioLocal() {
       o incorrectas; nos interesa conocer cómo interpretarías
       la información y qué decisión tomarías en su lugar.
     </p>
-
-    <button
-      onclick="comenzarExperimento()"
-    >
-      Comenzar
-    </button>
-
-  `;
-
-  }
-}
-
-
-/* ======================================================
-   PÁGINA PUENTE
-   ====================================================== */
-
-function mostrarPuente() {
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-  document.getElementById("app").innerHTML = `
-
-    <h1>
-      A continuación comienza la segunda parte del estudio
-    </h1>
-
-    <p>
-      En las siguientes pantallas encontrarás dos casos
-      ficticios relacionados con situaciones de inversión
-      personal.
-    </p>
-
-    <p>
-      En cada caso se mostrará el perfil financiero de
-      una persona junto con distintas alternativas entre
-      las que deberá tomar una decisión.
-    </p>
-
-    <p>
-      Observa con atención la información presentada y
-      responde a las preguntas que aparecerán después
-      de cada caso.
-    </p>
-
-    <p>
-      En la elección final no existen respuestas correctas
-      o incorrectas; nos interesa conocer cómo interpretas
-      la información y qué decisión tomarías.
-    </p>
-
-    <div class="info-box">
-      El proceso completo tendrá una duración aproximada
-      de 10 minutos.
-    </div>
 
     <button
       onclick="comenzarExperimento()"
