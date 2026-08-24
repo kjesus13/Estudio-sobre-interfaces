@@ -108,8 +108,8 @@
     }
 
     .image-container {
-      width: calc(100% + 72px);
-      margin-left: -36px;
+      width: calc(100% + 100px);
+      margin-left: -50px;
       margin-top: 22px;
       margin-bottom: 30px;
       border-top: 1px solid #CBD5E1;
@@ -126,8 +126,8 @@
     @media (max-width: 600px) {
 
     .image-container {
-      width: calc(100% + 54px);
-      margin-left: -27px;
+      width: calc(100% + 70px);
+      margin-left: -35px;
     }
 
     }
@@ -160,6 +160,18 @@
       padding: 14px;
       margin: 20px 0;
       line-height: 1.5;
+    }
+
+    .title-box {
+      background: #EFF6FF;
+      border-left: 4px solid #2563EB;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+
+    .title-box h1 {
+      margin: 0;
     }
 
     .error {
@@ -234,12 +246,14 @@ let escenarioActual = null;
 
 function mostrarBienvenida() {
 
-  document.getElementById("app").innerHTML = `
+   document.getElementById("app").innerHTML = `
 
-    <h1>
-      Estudio sobre interfaces para la toma
-      de decisiones financieras
-    </h1>
+    <div class="title-box">
+      <h1>
+        Estudio sobre interfaces para la toma
+        de decisiones financieras
+      </h1>
+    </div>
 
     <p>
       Este estudio analiza cómo diferentes formas
@@ -262,16 +276,17 @@ function mostrarBienvenida() {
 
   <p>
     Este estudio forma parte de un Trabajo Fin de Máster
-    y tiene como objetivo analizar cómo diferentes formas
-    de presentar información financiera pueden influir en
-    la comprensión y la toma de decisiones.
+    y la participación es voluntaria.
   </p>
 
   <p>
-    La participación es voluntaria y puedes abandonar
-    el estudio en cualquier momento antes de finalizarlo.
-    Las respuestas se utilizarán exclusivamente con fines
-    académicos y de investigación.
+    Las respuestas se analizarán de forma agregada
+    con fines académicos.
+  </p>
+
+  <p>
+    Al continuar, confirmas que has leído esta información
+    y aceptas participar en el estudio.
   </p>
 
   <p>
@@ -376,9 +391,7 @@ function mostrarCuestionario() {
           "Nunca he invertido.",
           "He invertido una vez o de forma puntual.",
           "He realizado inversiones en varias ocasiones.",
-          "Invierto actualmente.",
-          "Prefiero no responder."
-        ]
+          "Invierto actualmente."        ]
       )}
 
     </div>
@@ -405,14 +418,38 @@ function mostrarCuestionario() {
     </div>
 
 
-    <div class="question">
+        <div class="question">
 
       <div class="question-title">
         4. ¿Cómo valorarías tus conocimientos
         sobre finanzas personales e inversión?
       </div>
 
-      ${crearEscala("conocimiento")}
+      ${crearEscala("conocimiento", "Ninguno", "Muy altos")}
+
+    </div>
+
+
+    <div class="info-box">
+
+      <p>
+        A continuación se muestran algunas afirmaciones sobre
+        la forma en que sueles tomar decisiones. Indica hasta
+        qué punto estás de acuerdo con cada una.
+      </p>
+
+      <p>
+        Para las cuatro preguntas utilizamos exactamente
+        la misma escala:
+      </p>
+
+      <p style="margin: 0;">
+        1 — Totalmente en desacuerdo<br>
+        2 — En desacuerdo<br>
+        3 — Ni de acuerdo ni en desacuerdo<br>
+        4 — De acuerdo<br>
+        5 — Totalmente de acuerdo
+      </p>
 
     </div>
 
@@ -505,13 +542,46 @@ function crearOpciones(
     .join("");
 }
 
+  function crearEscalaSUS(nombre) {
+
+  return `
+
+    <div class="scale">
+
+      ${[1, 2, 3, 4, 5].map(i => `
+
+        <label>
+          <input type="radio" name="${nombre}" value="${i}">
+          ${i}
+        </label>
+
+      `).join("")}
+
+    </div>
+
+    <div style="
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 4px;
+    ">
+      <span>Totalmente en desacuerdo</span>
+      <span>Totalmente de acuerdo</span>
+    </div>
+
+  `;
+}
+
 
 /* ======================================================
    CREAR ESCALA 1–5
    ====================================================== */
 
 function crearEscala(
-  nombre
+  nombre,
+  etiquetaMin = "",
+  etiquetaMax = ""
 ) {
 
   let html =
@@ -543,6 +613,22 @@ function crearEscala(
   html += `
     </div>
   `;
+
+  if (etiquetaMin || etiquetaMax) {
+
+    html += `
+      <div style="
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #64748B;
+        margin-top: 4px;
+      ">
+        <span>${etiquetaMin}</span>
+        <span>${etiquetaMax}</span>
+      </div>
+    `;
+  }
 
   return html;
 }
@@ -659,21 +745,44 @@ async function guardarCuestionarioLocal() {
 
   catch (error) {
 
-    document.getElementById("app").innerHTML = `
+      document.getElementById("app").innerHTML = `
 
-      <h2>
-        No se han podido guardar las respuestas
-      </h2>
+    <h1>
+      A continuación comienza la segunda parte del estudio
+    </h1>
 
-      <p>
-        Comprueba tu conexión a Internet e inténtalo de nuevo.
-      </p>
+    <p>
+      ⚠️ A continuación verás dos casos ficticios de inversión.
+      No tienen relación con tu situación personal: te pedimos
+      que respondas tal y como actuarías tú si fueras la persona
+      del caso, poniéndote en su lugar.
+    </p>
 
-      <button onclick="mostrarCuestionario()">
-        Volver al cuestionario
-      </button>
+    <p>
+      En cada caso se mostrará el perfil financiero de
+      una persona junto con distintas alternativas entre
+      las que deberá tomar una decisión.
+    </p>
 
-    `;
+    <p>
+      Observa con atención la información presentada y
+      responde a las preguntas que aparecerán después
+      de cada caso.
+    </p>
+
+    <p>
+      En la elección final no existen respuestas correctas
+      o incorrectas; nos interesa conocer cómo interpretarías
+      la información y qué decisión tomarías en su lugar.
+    </p>
+
+    <button
+      onclick="comenzarExperimento()"
+    >
+      Comenzar
+    </button>
+
+  `;
 
   }
 }
@@ -814,8 +923,7 @@ const escenarios = {
   "A": {
 
     titulo:
-      "Caso ficticio A — Primera inversión",
-
+      "Caso ficticio: Primera inversión",
     contexto:
       "Imagina que has conseguido ahorrar y deseas realizar tu primera inversión con el objetivo de comprar una vivienda.",
 
@@ -846,8 +954,7 @@ const escenarios = {
   "B": {
 
     titulo:
-      "Caso ficticio B — Revisión de una inversión",
-
+      "Caso ficticio: Revisión de una inversión",
     contexto:
       "Imagina que ya realizaste una inversión y ahora debes decidir qué hacer con ella para complementar tu jubilación.",
 
@@ -926,14 +1033,14 @@ function mostrarEscenario() {
     Date.now();
 
 
-  document.getElementById("app").innerHTML = `
+    document.getElementById("app").innerHTML = `
 
     <h1>
       ${datos.titulo}
     </h1>
 
     <p>
-      ${datos.contexto}
+      Lee atentamente y observa la información de la interfaz.
     </p>
 
     <div
@@ -979,8 +1086,8 @@ function mostrarPreguntas(
 
   const decision =
     escenario === "A"
-      ? "¿Qué opción elegirías en este caso?"
-      : "¿Qué harías en esta situación?";
+      ? "¿Qué opción elegirías tú en este caso?"
+      : "¿Qué harías tú en esta situación?";
 
 
   document.getElementById(
@@ -1038,7 +1145,9 @@ function mostrarPreguntas(
       </div>
 
       ${crearEscala(
-        "confianza"
+        "confianza",
+        "Ninguna",
+        "Muy alta"
       )}
 
     </div>
@@ -1052,7 +1161,9 @@ function mostrarPreguntas(
       </div>
 
       ${crearEscala(
-        "esfuerzo"
+        "esfuerzo",
+        "Ninguno",
+        "Muy alto"
       )}
 
     </div>
@@ -1332,7 +1443,7 @@ function mostrarSUS() {
 
     "Creo que necesitaría ayuda de una persona técnica para poder utilizar esta interfaz.",
 
-    "Las distintas funciones de la interfaz estaban bien integradas.",
+    "Los distintos elementos de la interfaz estaban bien integrados.",
 
     "Encontré demasiadas inconsistencias en la interfaz.",
 
@@ -1345,16 +1456,28 @@ function mostrarSUS() {
     "Necesitaría aprender muchas cosas antes de poder utilizar esta interfaz."
   ];
 
-  document.getElementById("app").innerHTML = `
+   document.getElementById("app").innerHTML = `
 
     <h1>
       Evaluación final
     </h1>
 
-    <p>
-      Indica hasta qué punto estás de acuerdo o en desacuerdo
-      con cada afirmación.
-    </p>
+    <div class="info-box">
+
+      <p>
+        Para las siguientes preguntas utilizamos exactamente
+        la misma escala:
+      </p>
+
+      <p style="margin: 0;">
+        1 — Totalmente en desacuerdo<br>
+        2 — En desacuerdo<br>
+        3 — Ni de acuerdo ni en desacuerdo<br>
+        4 — De acuerdo<br>
+        5 — Totalmente de acuerdo
+      </p>
+
+    </div>
 
     ${preguntas
       .map(
@@ -1366,16 +1489,7 @@ function mostrarSUS() {
               ${i + 1}. ${pregunta}
             </div>
 
-            ${crearOpciones(
-              "sus_" + (i + 1),
-              [
-                "1 — Totalmente en desacuerdo",
-                "2 — En desacuerdo",
-                "3 — Neutral",
-                "4 — De acuerdo",
-                "5 — Totalmente de acuerdo"
-              ]
-            )}
+            ${crearEscalaSUS("sus_" + (i + 1))}
 
           </div>
 
@@ -1405,8 +1519,7 @@ async function guardarSUS() {
       return;
     }
 
-    valores.push(Number(valor.split(" ")[0]));
-  }
+    valores.push(Number(valor));  }
 
   /*
    * Cálculo SUS
