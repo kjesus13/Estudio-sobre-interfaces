@@ -1,207 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Estudio sobre interfaces para la toma de decisiones financieras
-  </title>
-
-  <style>
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: #F5F7FA;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-      color: #1F2937;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 18px 14px 40px;
-    }
-
-    .card {
-      background: #FFFFFF;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow:
-        0 4px 18px
-        rgba(0, 0, 0, 0.06);
-    }
-
-    h1 {
-      margin-top: 0;
-      font-size: 26px;
-      line-height: 1.25;
-    }
-
-    h2 {
-      margin-top: 0;
-      font-size: 21px;
-      line-height: 1.3;
-    }
-
-    p {
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .intro {
-      margin-bottom: 24px;
-    }
-
-    .question {
-      margin-top: 28px;
-    }
-
-    .question-title {
-      font-weight: bold;
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-
-    .option {
-      display: block;
-      padding: 9px 0;
-      font-size: 15px;
-      line-height: 1.4;
-    }
-
-    .option input {
-      margin-right: 8px;
-    }
-
-    .scale {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      margin-top: 10px;
-    }
-
-    .scale label {
-      flex: 1;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .scale input {
-      display: block;
-      margin: 0 auto 6px;
-    }
-
-    .image-container {
-      width: calc(100% + 100px);
-      margin-left: -50px;
-      margin-top: 22px;
-      margin-bottom: 30px;
-      border-top: 1px solid #CBD5E1;
-      border-bottom: 1px solid #CBD5E1;
-    }
-
-    .image-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 0;
-    }
-
-    @media (max-width: 600px) {
-
-    .image-container {
-      width: calc(100% + 70px);
-      margin-left: -35px;
-    }
-
-    }
-
-    button {
-      width: 100%;
-      padding: 13px 18px;
-      margin-top: 26px;
-      border: none;
-      border-radius: 8px;
-      background: #2563EB;
-      color: #FFFFFF;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-    }
-
-    .loading {
-      text-align: center;
-      padding: 30px 10px;
-      color: #64748B;
-    }
-
-    .info-box {
-      background: #EFF6FF;
-      border-radius: 10px;
-      padding: 14px;
-      margin: 20px 0;
-      line-height: 1.5;
-    }
-
-    .title-box {
-      background: #EFF6FF;
-      border-left: 4px solid #2563EB;
-      border-radius: 10px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-    }
-
-    .title-box h1 {
-      margin: 0;
-    }
-
-    .error {
-      background: #FEF2F2;
-      color: #991B1B;
-      padding: 14px;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-
-  </style>
-
-</head>
-
-
-<body>
-
-<div class="container">
-
-  <div class="card">
-
-    <div id="app"></div>
-
-  </div>
-
-</div>
-
-
-<script>
-
 /* ======================================================
    SESIÓN DEL PARTICIPANTE
    ====================================================== */
@@ -209,19 +5,11 @@
 const API_URL =
   "https://script.google.com/macros/s/AKfycbzHglXr5umt_xV6vFsOLhRozPojW928Un9LmPP8BFdjuft6kic_J0Q9ZHS4E9-CMjhhew/exec";
 
-let sessionId =
-  sessionStorage.getItem("tfm_session_id");
+let sessionId = sessionStorage.getItem("tfm_session_id");
 
 if (!sessionId) {
-
-  sessionId =
-    "S-" +
-    crypto.randomUUID();
-
-  sessionStorage.setItem(
-    "tfm_session_id",
-    sessionId
-  );
+  sessionId = "S-" + crypto.randomUUID();
+  sessionStorage.setItem("tfm_session_id", sessionId);
 }
 
 
@@ -230,14 +18,9 @@ if (!sessionId) {
    ====================================================== */
 
 let datosParticipante = {};
-
 let condicion = null;
-
 let indiceEscenario = 0;
-
 let inicioEscenario = null;
-
-let escenarioActual = null;
 
 
 /* ======================================================
@@ -246,7 +29,7 @@ let escenarioActual = null;
 
 function mostrarBienvenida() {
 
-   document.getElementById("app").innerHTML = `
+  document.getElementById("app").innerHTML = `
 
     <div class="title-box">
       <h1>
@@ -270,63 +53,48 @@ function mostrarBienvenida() {
 
     <div class="info-box">
 
-  <strong>
-    Participación en el estudio
-  </strong>
+      <strong>Participación en el estudio</strong>
 
-  <p>
-    Este estudio forma parte de un Trabajo Fin de Máster
-    y la participación es voluntaria.
-  </p>
+      <p>
+        Este estudio forma parte de un Trabajo Fin de Máster
+        y la participación es voluntaria.
+      </p>
 
-  <p>
-    Las respuestas se analizarán de forma agregada
-    con fines académicos.
-  </p>
+      <p>
+        Las respuestas se analizarán de forma agregada
+        con fines académicos.
+      </p>
 
-  <p>
-    Al continuar, confirmas que has leído esta información
-    y aceptas participar en el estudio.
-  </p>
+      <p>
+        Al continuar, confirmas que has leído esta información
+        y aceptas participar en el estudio.
+      </p>
 
-  <p>
-    El estudio tiene una duración aproximada de 10 minutos.
-  </p>
+      <p>
+        El estudio tiene una duración aproximada de 10 minutos.
+      </p>
 
-</div>
+    </div>
 
-<label class="option">
+    <label class="option">
+      <input type="checkbox" id="consentimiento">
+      He leído la información anterior y acepto participar
+      voluntariamente en el estudio.
+    </label>
 
-  <input
-    type="checkbox"
-    id="consentimiento"
-  >
-
-  He leído la información anterior y acepto participar
-  voluntariamente en el estudio.
-
-</label>
-
-<button onclick="iniciarCuestionario()">
-    Continuar con el cuestionario
-</button>
+    <button onclick="iniciarCuestionario()">
+      Continuar con el cuestionario
+    </button>
 
   `;
 }
 
 function iniciarCuestionario() {
 
-  const consentimiento =
-    document.getElementById(
-      "consentimiento"
-    );
+  const consentimiento = document.getElementById("consentimiento");
 
   if (!consentimiento.checked) {
-
-    alert(
-      "Debes aceptar participar en el estudio para continuar."
-    );
-
+    alert("Debes aceptar participar en el estudio para continuar.");
     return;
   }
 
@@ -340,17 +108,11 @@ function iniciarCuestionario() {
 
 function mostrarCuestionario() {
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   document.getElementById("app").innerHTML = `
 
-    <h1>
-      Cuestionario inicial
-    </h1>
+    <h1>Cuestionario inicial</h1>
 
     <p>
       Las siguientes preguntas permiten conocer
@@ -358,91 +120,49 @@ function mostrarCuestionario() {
       No hay respuestas correctas o incorrectas.
     </p>
 
-
     <div class="question">
-
       <div class="question-title">
         1. ¿En qué intervalo de edad te encuentras?
       </div>
-
-      ${crearOpciones(
-        "edad",
-        [
-          "18–24 años",
-          "25–34 años",
-          "35–44 años",
-          "45–54 años",
-          "55 años o más"        ]
-      )}
-
+      ${crearOpciones("edad", ["18–24 años", "25–34 años", "35–44 años", "45–54 años", "55 años o más"])}
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         2. ¿Cuál de las siguientes opciones describe
         mejor tu experiencia realizando inversiones?
       </div>
-
-      ${crearOpciones(
-        "experiencia",
-        [
-          "Nunca he invertido.",
-          "He invertido una vez o de forma puntual.",
-          "He realizado inversiones en varias ocasiones.",
-          "Invierto actualmente."        ]
-      )}
-
+      ${crearOpciones("experiencia", [
+        "Nunca he invertido.",
+        "He invertido una vez o de forma puntual.",
+        "He realizado inversiones en varias ocasiones.",
+        "Invierto actualmente."
+      ])}
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         3. ¿Con qué frecuencia consultas información
         sobre finanzas personales o inversiones?
       </div>
-
-      ${crearOpciones(
-        "frecuencia",
-        [
-          "Nunca",
-          "Rara vez",
-          "Algunas veces",
-          "Frecuentemente",
-          "Muy frecuentemente"
-        ]
-      )}
-
+      ${crearOpciones("frecuencia", ["Nunca", "Rara vez", "Algunas veces", "Frecuentemente", "Muy frecuentemente"])}
     </div>
 
-
-        <div class="question">
-
+    <div class="question">
       <div class="question-title">
         4. ¿Cómo valorarías tus conocimientos
         sobre finanzas personales e inversión?
       </div>
-
       ${crearEscala("conocimiento", "Ninguno", "Muy altos")}
-
     </div>
 
-
     <div class="info-box">
-
       <p>
         A continuación se muestran algunas afirmaciones sobre
         la forma en que sueles tomar decisiones. Indica hasta
         qué punto estás de acuerdo con cada una.
       </p>
-
-      <p>
-        Para las cuatro preguntas utilizamos exactamente
-        la misma escala:
-      </p>
-
+      <p>Para las cuatro preguntas utilizamos exactamente la misma escala:</p>
       <p style="margin: 0;">
         1 — Totalmente en desacuerdo<br>
         2 — En desacuerdo<br>
@@ -450,180 +170,96 @@ function mostrarCuestionario() {
         4 — De acuerdo<br>
         5 — Totalmente de acuerdo
       </p>
-
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         5. Prefiero una opción con menor riesgo aunque
         su posible rentabilidad sea menor.
       </div>
-
       ${crearEscala("p5")}
-
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         6. Estoy dispuesto/a a asumir más riesgo si existe
         la posibilidad de obtener una mayor rentabilidad.
       </div>
-
       ${crearEscala("p6")}
-
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         7. Cuando tengo que elegir entre varias alternativas,
         suelo decantarme por la opción más segura.
       </div>
-
       ${crearEscala("p7")}
-
     </div>
 
-
     <div class="question">
-
       <div class="question-title">
         8. Ante una decisión importante, prefiero asumir
         cierta incertidumbre si puede mejorar el resultado.
       </div>
-
       ${crearEscala("p8")}
-
     </div>
 
-
-    <button
-      onclick="guardarCuestionarioLocal()"
-    >
-      Continuar
-    </button>
+    <button onclick="guardarCuestionarioLocal()">Continuar</button>
 
   `;
 }
 
 
 /* ======================================================
-   CREAR OPCIONES
+   CREAR OPCIONES / ESCALAS / LEER RADIO
    ====================================================== */
 
-function crearOpciones(
-  nombre,
-  opciones
-) {
+function crearOpciones(nombre, opciones) {
 
-  return opciones
-    .map(
-      opcion => `
-
-        <label class="option">
-
-          <input
-            type="radio"
-            name="${nombre}"
-            value="${opcion}"
-          >
-
-          ${opcion}
-
-        </label>
-
-      `
-    )
-    .join("");
+  return opciones.map(opcion => `
+    <label class="option">
+      <input type="radio" name="${nombre}" value="${opcion}">
+      ${opcion}
+    </label>
+  `).join("");
 }
 
-  function crearEscalaSUS(nombre) {
+function crearEscalaSUS(nombre) {
 
   return `
-
     <div class="scale">
-
       ${[1, 2, 3, 4, 5].map(i => `
-
         <label>
           <input type="radio" name="${nombre}" value="${i}">
           ${i}
         </label>
-
       `).join("")}
-
     </div>
-
-        <div style="
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #64748B;
-      margin-top: 4px;
-    ">
+    <div style="display: flex; justify-content: space-between; font-size: 12px; color: #64748B; margin-top: 4px;">
       <span style="max-width: 70px;">Totalmente<br>en desacuerdo</span>
       <span style="max-width: 70px; text-align: right;">Totalmente<br>de acuerdo</span>
     </div>
-
   `;
 }
 
+function crearEscala(nombre, etiquetaMin = "", etiquetaMax = "") {
 
-/* ======================================================
-   CREAR ESCALA 1–5
-   ====================================================== */
+  let html = `<div class="scale">`;
 
-function crearEscala(
-  nombre,
-  etiquetaMin = "",
-  etiquetaMax = ""
-) {
-
-  let html =
-    `<div class="scale">`;
-
-  for (
-    let i = 1;
-    i <= 5;
-    i++
-  ) {
-
+  for (let i = 1; i <= 5; i++) {
     html += `
-
       <label>
-
-        <input
-          type="radio"
-          name="${nombre}"
-          value="${i}"
-        >
-
+        <input type="radio" name="${nombre}" value="${i}">
         ${i}
-
       </label>
-
     `;
   }
 
-  html += `
-    </div>
-  `;
+  html += `</div>`;
 
   if (etiquetaMin || etiquetaMax) {
-
     html += `
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: #64748B;
-        margin-top: 4px;
-      ">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #64748B; margin-top: 4px;">
         <span>${etiquetaMin}</span>
         <span>${etiquetaMax}</span>
       </div>
@@ -633,134 +269,59 @@ function crearEscala(
   return html;
 }
 
+function leerRadio(nombre) {
 
-/* ======================================================
-   LEER RADIO
-   ====================================================== */
-
-function leerRadio(
-  nombre
-) {
-
-  const elemento =
-    document.querySelector(
-      `input[name="${nombre}"]:checked`
-    );
-
-  return elemento
-    ? elemento.value
-    : null;
+  const elemento = document.querySelector(`input[name="${nombre}"]:checked`);
+  return elemento ? elemento.value : null;
 }
 
 
 /* ======================================================
-   GUARDAR CUESTIONARIO
-   SOLO LOCALMENTE DE MOMENTO
+   GUARDAR CUESTIONARIO INICIAL
    ====================================================== */
 
 async function guardarCuestionarioLocal() {
 
-  const campos = [
-    "edad",
-    "experiencia",
-    "frecuencia",
-    "conocimiento",
-    "p5",
-    "p6",
-    "p7",
-    "p8"
-  ];
-
+  const campos = ["edad", "experiencia", "frecuencia", "conocimiento", "p5", "p6", "p7", "p8"];
   const respuestas = {};
 
   for (const campo of campos) {
 
-    const valor =
-      leerRadio(campo);
+    const valor = leerRadio(campo);
 
     if (!valor) {
-
-      alert(
-        "Por favor, responde a todas las preguntas antes de continuar."
-      );
-
+      alert("Por favor, responde a todas las preguntas antes de continuar.");
       return;
     }
 
     respuestas[campo] = valor;
   }
 
-  // Consentimiento
   respuestas.consentimiento = "Sí";
-
-  // Guardamos localmente
   datosParticipante = respuestas;
 
-  // Mostrar estado de carga
   document.getElementById("app").innerHTML = `
-
-    <div class="loading">
-
-      <p>
-        Guardando tus respuestas...
-      </p>
-
-    </div>
-
+    <div class="loading"><p>Guardando tus respuestas...</p></div>
   `;
 
   try {
 
-    await fetch(
-      API_URL,
-      {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({
-
-          tipo:
-            "cuestionario",
-
-          sessionId:
-            sessionId,
-
-          ...respuestas
-
-        })
-      }
-    );
-
-    // -----------------------------------------
-    // Una vez enviado:
-    // mostrar puente
-    // -----------------------------------------
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ tipo: "cuestionario", sessionId: sessionId, ...respuestas })
+    });
 
     mostrarPuente();
 
-  }
+  } catch (error) {
 
-  catch (error) {
-
-      document.getElementById("app").innerHTML = `
-
-      <h2>
-        No se han podido guardar las respuestas
-      </h2>
-
-      <p>
-        Comprueba tu conexión a Internet e inténtalo de nuevo.
-      </p>
-
-      <button onclick="mostrarCuestionario()">
-        Volver al cuestionario
-      </button>
-
+    document.getElementById("app").innerHTML = `
+      <h2>No se han podido guardar las respuestas</h2>
+      <p>Comprueba tu conexión a Internet e inténtalo de nuevo.</p>
+      <button onclick="mostrarCuestionario()">Volver al cuestionario</button>
     `;
-
   }
 }
 
@@ -771,16 +332,11 @@ async function guardarCuestionarioLocal() {
 
 function mostrarPuente() {
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
-    document.getElementById("app").innerHTML = `
+  document.getElementById("app").innerHTML = `
 
-    <h1>
-      A continuación comienza la segunda parte del estudio
-    </h1>
+    <h1>A continuación comienza la segunda parte del estudio</h1>
 
     <p>
       ⚠️ A continuación verás dos casos ficticios de inversión.
@@ -807,36 +363,25 @@ function mostrarPuente() {
       la información y qué decisión tomarías en su lugar.
     </p>
 
-    <button
-      onclick="comenzarExperimento()"
-    >
-      Comenzar
-    </button>
+    <button onclick="comenzarExperimento()">Comenzar</button>
 
   `;
 }
 
 
 /* ======================================================
-   ASIGNACIÓN LOCAL
+   ASIGNACIÓN DE CONDICIÓN
    ====================================================== */
 
 async function comenzarExperimento() {
 
   document.getElementById("app").innerHTML = `
-    <div class="loading">
-      <p>Preparando el estudio...</p>
-    </div>
+    <div class="loading"><p>Preparando el estudio...</p></div>
   `;
 
   try {
 
-    const response = await fetch(
-      API_URL +
-      "?action=asignar&session=" +
-      encodeURIComponent(sessionId)
-    );
-
+    const response = await fetch(API_URL + "?action=asignar&session=" + encodeURIComponent(sessionId));
     const data = await response.json();
 
     if (!data.ok) {
@@ -866,27 +411,6 @@ async function comenzarExperimento() {
 }
 
 
-async function probarAsignacionDirecta() {
-
-  try {
-
-    const response = await fetch(
-      API_URL +
-      "?action=asignar&session=" +
-      encodeURIComponent(sessionId)
-    );
-
-    const data = await response.json();
-
-    alert(JSON.stringify(data));
-
-  } catch (error) {
-
-    alert("Error de red: " + error.message);
-  }
-}
-
-
 /* ======================================================
    CONFIGURACIÓN DE ESCENARIOS
    ====================================================== */
@@ -894,64 +418,13 @@ async function probarAsignacionDirecta() {
 const escenarios = {
 
   "A": {
-
-    titulo:
-      "Caso ficticio: Primera inversión",
-    contexto:
-      "Imagina que has conseguido ahorrar y deseas realizar tu primera inversión con el objetivo de comprar una vivienda.",
-
-    imagen: {
-
-      I1:
-        "1A.jpg",
-
-      I2:
-        "2A.jpg",
-
-      I3:
-        "3A.jpg"
-
-    },
-
-    opciones: [
-
-      "Opción A",
-      "Opción B",
-      "Opción C"
-
-    ]
-
+    titulo: "Caso ficticio: Primera inversión",
+    imagen: { I1: "1A.jpg", I2: "2A.jpg", I3: "3A.jpg" }
   },
 
-
   "B": {
-
-    titulo:
-      "Caso ficticio: Revisión de una inversión",
-    contexto:
-      "Imagina que ya realizaste una inversión y ahora debes decidir qué hacer con ella para complementar tu jubilación.",
-
-    imagen: {
-
-      I1:
-        "1B.jpg",
-
-      I2:
-        "2B.jpg",
-
-      I3:
-        "3B.jpg"
-
-    },
-
-    opciones: [
-
-      "Mantener",
-      "Cambiar",
-      "Vender"
-
-    ]
-
+    titulo: "Caso ficticio: Revisión de una inversión",
+    imagen: { I1: "1B.jpg", I2: "2B.jpg", I3: "3B.jpg" }
   }
 
 };
@@ -965,224 +438,275 @@ function mostrarEscenario() {
 
   window.scrollTo(0, 0);
 
-  const partes =
-    condicion.split("_");
+  const partes = condicion.split("_");
+  const interfaz = partes[0];
+  const orden = partes[1];
 
-  const interfaz =
-    partes[0];
+  const secuencia = orden === "AB" ? ["A", "B"] : ["B", "A"];
 
-  const orden =
-    partes[1];
-
-
-  const secuencia =
-    orden === "AB"
-      ? ["A", "B"]
-      : ["B", "A"];
-
-
-  if (
-    indiceEscenario >=
-    secuencia.length
-  ) {
-
-  mostrarNASA_TLX();
-    
+  if (indiceEscenario >= secuencia.length) {
+    mostrarNASA_TLX();
     return;
   }
 
+  const escenario = secuencia[indiceEscenario];
+  const datos = escenarios[escenario];
 
-  const escenario =
-    secuencia[indiceEscenario];
+  inicioEscenario = Date.now();
 
-  escenarioActual = escenario; // "A" o "B"
+  document.getElementById("app").innerHTML = `
 
+    <h1>${datos.titulo}</h1>
 
-  const datos =
-    escenarios[escenario];
+    <p>Lee atentamente y observa la información de la interfaz.</p>
 
-
-  inicioEscenario =
-    Date.now();
-
-
-    document.getElementById("app").innerHTML = `
-
-    <h1>
-      ${datos.titulo}
-    </h1>
-
-    <p>
-      Lee atentamente y observa la información de la interfaz.
-    </p>
-
-    <div
-      class="image-container"
-    >
-
-      <img
-        src="${datos.imagen[interfaz]}"
-        alt="Interfaz del caso ficticio"
-      >
-
+    <div class="image-container">
+      <img src="${datos.imagen[interfaz]}" alt="Interfaz del caso ficticio">
     </div>
 
-    <div id="preguntas"></div>
-
-    <button
-      onclick="guardarEscenario()"
-    >
-      Continuar
-    </button>
+    <div id="tarea-container"></div>
 
   `;
 
-
-  mostrarPreguntas(
-    escenario,
-    datos.opciones
-  );
-
-  window.scrollTo(0, 0);
-  
+  iniciarBateriaTareas(escenario);
 }
 
 
 /* ======================================================
-   PREGUNTAS ESCENARIO
+   BATERÍA DE MICROTAREAS
    ====================================================== */
 
-function mostrarPreguntas(
-  escenario,
-  opciones
-) {
+const OPCIONES_A = ["Opción A", "Opción B", "Opción C"];
+const OPCIONES_B = ["Mantener", "Cambiar", "Reducir", "Vender"];
+const OPCIONES_PUNTOS = ["1 punto", "2 puntos", "3 puntos", "5 puntos"];
 
-  const decision =
-    escenario === "A"
-      ? "¿Qué opción elegirías tú en este caso?"
-      : "¿Qué harías tú en esta situación?";
+const bateriaTareas = {
+
+  A: [
+    { id: "A1", tipo: "lookup", pregunta: "¿Qué alternativa presenta la mayor rentabilidad media anual?", opciones: OPCIONES_A, correcta: "Opción C" },
+    { id: "A2", tipo: "lookup", pregunta: "¿Qué alternativa presenta el menor nivel de riesgo?", opciones: OPCIONES_A, correcta: "Opción A" },
+    { id: "A3", tipo: "comparison", pregunta: "¿Qué alternativa presenta una rentabilidad media anual 2 puntos porcentuales mayor que la Opción A?", opciones: OPCIONES_A, correcta: "Opción B" },
+    { id: "A4", tipo: "relation", pregunta: "¿Qué alternativa presenta simultáneamente una mayor rentabilidad y un mayor nivel de riesgo que la Opción B?", opciones: OPCIONES_A, correcta: "Opción C" },
+    { id: "A5", tipo: "conditional_selection", pregunta: "Teniendo en cuenta que quieres asumir como máximo un nivel de riesgo medio, ¿qué alternativa ofrece la mayor rentabilidad?", opciones: OPCIONES_A, correcta: "Opción B" },
+    { id: "A6", tipo: "integration", opinion: true, pregunta: "Considerando el horizonte temporal, el objetivo y la tolerancia al riesgo indicados en el perfil, ¿cuál elegirías tú para este caso?", opciones: OPCIONES_A, recomendada: "Opción B" }
+  ],
+
+  B: [
+    { id: "B1", tipo: "lookup", pregunta: "¿Qué alternativa presenta la mayor rentabilidad media anual?", opciones: OPCIONES_B, correcta: "Cambiar" },
+    { id: "B2", tipo: "lookup_condicionada", pregunta: "¿Qué alternativa presenta el menor nivel de riesgo entre las que mantienen una inversión activa?", opciones: OPCIONES_B, correcta: "Reducir" },
+    { id: "B3", tipo: "comparison", pregunta: "¿Cuántos puntos porcentuales de rentabilidad media anual separan a Mantener y Cambiar?", opciones: OPCIONES_PUNTOS, correcta: "2 puntos" },
+    { id: "B4", tipo: "relation", pregunta: "¿Qué alternativa ofrece una mayor rentabilidad que Mantener y también implica un mayor nivel de riesgo?", opciones: OPCIONES_B, correcta: "Cambiar" },
+    { id: "B5", tipo: "conditional_selection", pregunta: "Teniendo en cuenta que no quieres asumir un nivel de riesgo superior al medio, ¿qué alternativa ofrece la mayor rentabilidad?", opciones: OPCIONES_B, correcta: "Mantener" },
+    { id: "B6", tipo: "integration", opinion: true, pregunta: "Considerando el horizonte de 25 años, el objetivo de complementar la jubilación y la tolerancia al riesgo indicada, ¿qué harías tú en esta situación?", opciones: OPCIONES_B, recomendada: "Mantener" }
+  ]
+
+};
 
 
-  document.getElementById(
-    "preguntas"
-  ).innerHTML = `
+/* ======================================================
+   MOTOR DEL CARRUSEL DE TAREAS
+   ====================================================== */
+
+let indiceTarea = 0;
+let inicioTarea = null;
+let bufferTareas = [];
+let bufferEventos = [];
+let respuestaActual = null;
+let firstResponseActual = null;
+let nInteraccionesActual = 0;
+
+function iniciarBateriaTareas(escenario) {
+
+  indiceTarea = 0;
+  bufferTareas = [];
+  bufferEventos = [];
+
+  mostrarTarea(escenario);
+}
+
+function registrarEvento(escenario, tarea, tipoEvento, valor) {
+
+  const orden = condicion.endsWith("_AB") ? "AB" : "BA";
+  const interfaz = condicion.split("_")[0];
+
+  bufferEventos.push({
+    event_id: crypto.randomUUID(),
+    interfaz: interfaz,
+    scenario_order: orden,
+    scenario: escenario,
+    task_id: tarea.id,
+    task_type: tarea.tipo,
+    event_type: tipoEvento,
+    value: valor,
+    timestamp: Date.now()
+  });
+}
+
+function mostrarTarea(escenario) {
+
+  const tarea = bateriaTareas[escenario][indiceTarea];
+
+  respuestaActual = null;
+  firstResponseActual = null;
+  nInteraccionesActual = 0;
+  inicioTarea = Date.now();
+
+  registrarEvento(escenario, tarea, "TASK_SHOWN", null);
+
+  document.getElementById("tarea-container").innerHTML = `
 
     <div class="question">
-
       <div class="question-title">
-        ¿Cuál de las tres opciones ofrece la mayor
-        rentabilidad anual?
+        ${indiceTarea + 1}/${bateriaTareas[escenario].length} — ${tarea.pregunta}
       </div>
-
-      ${crearOpciones(
-        "comprension",
-        opciones
-      )}
-
+      ${crearOpciones("tarea_actual", tarea.opciones)}
     </div>
 
+    <button onclick="siguienteTarea('${escenario}')">Siguiente</button>
+
+  `;
+
+  document.querySelectorAll('input[name="tarea_actual"]').forEach(input => {
+    input.addEventListener("change", () => registrarCambioRespuesta(escenario, tarea));
+  });
+}
+
+function registrarCambioRespuesta(escenario, tarea) {
+
+  const valor = leerRadio("tarea_actual");
+
+  if (!firstResponseActual) {
+    firstResponseActual = valor;
+  }
+
+  respuestaActual = valor;
+  nInteraccionesActual++;
+
+  registrarEvento(escenario, tarea, "RESPONSE_SELECT", valor);
+}
+
+function siguienteTarea(escenario) {
+
+  if (!respuestaActual) {
+    alert("Por favor, selecciona una respuesta antes de continuar.");
+    return;
+  }
+
+  const tarea = bateriaTareas[escenario][indiceTarea];
+  const finTarea = Date.now();
+  const tiempoSeg = Number(((finTarea - inicioTarea) / 1000).toFixed(1));
+
+  const correcta = tarea.opinion ? "" : (respuestaActual === tarea.correcta ? 1 : 0);
+
+  registrarEvento(escenario, tarea, "TASK_SUBMIT", respuestaActual);
+
+  bufferTareas.push({
+    task_id: tarea.id,
+    task_type: tarea.tipo,
+    task_order: indiceTarea + 1,
+    start: inicioTarea,
+    end: finTarea,
+    time_sec: tiempoSeg,
+    first_response: firstResponseActual,
+    response: respuestaActual,
+    correct: correcta,
+    n_interactions: nInteraccionesActual,
+    n_changes: Math.max(0, nInteraccionesActual - 1)
+  });
+
+  indiceTarea++;
+
+  if (indiceTarea < bateriaTareas[escenario].length) {
+    mostrarTarea(escenario);
+  } else {
+    mostrarConfianzaEsfuerzo(escenario);
+  }
+}
+
+function mostrarConfianzaEsfuerzo(escenario) {
+
+  document.getElementById("tarea-container").innerHTML = `
 
     <div class="question">
-
       <div class="question-title">
-        Según el perfil mostrado, ¿qué opción consideras
-        que se adapta mejor al caso?
+        ¿Qué grado de confianza tienes en tus respuestas de este caso?
       </div>
-
-      ${crearOpciones(
-        "interpretacion",
-        opciones
-      )}
-
+      ${crearEscala("confianza", "Ninguna", "Muy alta")}
     </div>
-
 
     <div class="question">
-
       <div class="question-title">
-        ${decision}
+        ¿Cuánto esfuerzo mental te ha supuesto responder a este caso?
       </div>
-
-      ${crearOpciones(
-        "decision",
-        opciones
-      )}
-
+      ${crearEscala("esfuerzo", "Ninguno", "Muy alto")}
     </div>
 
-
-    <div class="question">
-
-      <div class="question-title">
-        ¿Qué grado de confianza tienes en tu decisión?
-      </div>
-
-      ${crearEscala(
-        "confianza",
-        "Ninguna",
-        "Muy alta"
-      )}
-
-    </div>
-
-
-    <div class="question">
-
-      <div class="question-title">
-        ¿Cuánto esfuerzo mental te ha supuesto tomar
-        esta decisión?
-      </div>
-
-      ${crearEscala(
-        "esfuerzo",
-        "Ninguno",
-        "Muy alto"
-      )}
-
-    </div>
+    <button onclick="finalizarEscenario('${escenario}')">Continuar</button>
 
   `;
 }
 
+async function finalizarEscenario(escenario) {
 
-/* ======================================================
-   GUARDAR ESCENARIO
-   ====================================================== */
-
-async function guardarEscenario() {
-
-  const comprension = leerRadio("comprension");
-  const interpretacion = leerRadio("interpretacion");
-  const decision = leerRadio("decision");
   const confianza = leerRadio("confianza");
   const esfuerzo = leerRadio("esfuerzo");
 
-  if (!comprension || !interpretacion || !decision || !confianza || !esfuerzo) {
-    alert("Por favor, responde a todas las preguntas antes de continuar.");
+  if (!confianza || !esfuerzo) {
+    alert("Por favor, responde a las dos preguntas antes de continuar.");
     return;
   }
 
-  const tiempo = Math.round((Date.now() - inicioEscenario) / 1000);
-  const sufijo = escenarioActual; // "A" o "B"
+  const interfaz = condicion.split("_")[0];
+  const orden = condicion.endsWith("_AB") ? "AB" : "BA";
 
-  const payload = {
-    tipo: "escenario",
-    sessionId: sessionId
-  };
+  const tareasObjetivas = bufferTareas.filter(t => {
+    const config = bateriaTareas[escenario].find(c => c.id === t.task_id);
+    return config && !config.opinion;
+  });
 
-  payload["tiempo" + sufijo] = tiempo;
-  payload["comprension" + sufijo] = comprension;
-  payload["interpretacion" + sufijo] = interpretacion;
-  payload["decision" + sufijo] = decision;
-  payload["confianza" + sufijo] = confianza;
-  payload["esfuerzo" + sufijo] = esfuerzo;
+  const precision = Number(
+    (tareasObjetivas.reduce((s, t) => s + t.correct, 0) / tareasObjetivas.length).toFixed(2)
+  );
 
-  // Deshabilita el botón para evitar doble envío
-  const boton = document.querySelector("button[onclick='guardarEscenario()']");
+  const tareaOpinion = bufferTareas.find(t => {
+    const config = bateriaTareas[escenario].find(c => c.id === t.task_id);
+    return config && config.opinion;
+  });
+
+  const configOpinion = bateriaTareas[escenario].find(c => c.opinion);
+
+  const coincideRecomendacion = tareaOpinion
+    ? (tareaOpinion.response === configOpinion.recomendada ? 1 : 0)
+    : null;
+
+  const tiempoTotal = Math.round(bufferTareas.reduce((s, t) => s + t.time_sec, 0));
+
+  const tareasCompletas = bufferTareas.map(t => ({
+    ...t,
+    interfaz: interfaz,
+    escenario: escenario,
+    scenario_order: orden
+  }));
+
+  const boton = document.querySelector("#tarea-container button");
+
   if (boton) {
     boton.disabled = true;
     boton.textContent = "Guardando...";
   }
+
+  const payload = {
+    tipo: "escenario",
+    sessionId: sessionId,
+    tareas: tareasCompletas,
+    eventos: bufferEventos
+  };
+
+  payload["tiempo" + escenario] = tiempoTotal;
+  payload["precision" + escenario] = precision;
+  payload["coincideRecomendacion" + escenario] = coincideRecomendacion;
+  payload["confianza" + escenario] = confianza;
+  payload["esfuerzo" + escenario] = esfuerzo;
 
   try {
 
@@ -1196,16 +720,19 @@ async function guardarEscenario() {
   } catch (error) {
 
     alert("No se ha podido guardar tu respuesta. Comprueba tu conexión e inténtalo de nuevo.");
+
     if (boton) {
       boton.disabled = false;
       boton.textContent = "Continuar";
     }
+
     return;
   }
 
   indiceEscenario++;
   mostrarEscenario();
 }
+
 
 /* ======================================================
    NASA-TLX (RAW)
@@ -1217,21 +744,13 @@ function mostrarNASA_TLX() {
 
   slidersInteractuados = new Set();
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   document.getElementById("app").innerHTML = `
 
-    <h1>
-      Evaluación de la carga de trabajo
-    </h1>
+    <h1>Evaluación de la carga de trabajo</h1>
 
-    <p>
-      Piensa en la actividad que acabas de realizar
-      y valora cómo fue para ti.
-    </p>
+    <p>Piensa en la actividad que acabas de realizar y valora cómo fue para ti.</p>
 
     <div class="question">
       <div class="question-title">1. Demanda mental</div>
@@ -1269,9 +788,7 @@ function mostrarNASA_TLX() {
       ${crearEscala100("tlx_frustracion")}
     </div>
 
-    <button onclick="guardarNASA_TLX()">
-      Continuar
-    </button>
+    <button onclick="guardarNASA_TLX()">Continuar</button>
 
   `;
 }
@@ -1279,42 +796,22 @@ function mostrarNASA_TLX() {
 function crearEscala100(nombre) {
 
   return `
-
     <div style="margin-top: 12px;">
-
-      <input
-        type="range"
-        min="0"
-        max="100"
-        step="1"
-        value="50"
-        id="${nombre}"
-        style="width: 100%;"
-      >
-
-      <div style="
-        display: flex;
-        justify-content: space-between;
-        font-size: 13px;
-        color: #64748B;
-        margin-top: 6px;
-      ">
+      <input type="range" min="0" max="100" step="1" value="50" id="${nombre}" style="width: 100%;">
+      <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748B; margin-top: 6px;">
         <span>0 — Muy bajo</span>
         <span>Valor: <strong id="${nombre}_valor">Sin ajustar</strong></span>
         <span>100 — Muy alto</span>
       </div>
-
     </div>
-
   `;
 }
 
-document.addEventListener("input", function(event) {
+document.addEventListener("input", function (event) {
 
   if (event.target.matches('input[type="range"]')) {
 
     const id = event.target.id;
-
     slidersInteractuados.add(id);
 
     const valor = document.getElementById(id + "_valor");
@@ -1328,18 +825,9 @@ document.addEventListener("input", function(event) {
 
 async function guardarNASA_TLX() {
 
-  const nombres = [
-    "tlx_mental",
-    "tlx_fisica",
-    "tlx_tiempo",
-    "tlx_rendimiento",
-    "tlx_esfuerzo",
-    "tlx_frustracion"
-  ];
+  const nombres = ["tlx_mental", "tlx_fisica", "tlx_tiempo", "tlx_rendimiento", "tlx_esfuerzo", "tlx_frustracion"];
 
-  const faltantes = nombres.filter(
-    nombre => !slidersInteractuados.has(nombre)
-  );
+  const faltantes = nombres.filter(nombre => !slidersInteractuados.has(nombre));
 
   if (faltantes.length > 0) {
     alert("Por favor, ajusta todas las barras antes de continuar.");
@@ -1349,15 +837,10 @@ async function guardarNASA_TLX() {
   const valores = {};
 
   nombres.forEach(nombre => {
-    valores[nombre] = Number(
-      document.getElementById(nombre).value
-    );
+    valores[nombre] = Number(document.getElementById(nombre).value);
   });
 
-  const media = nombres.reduce(
-    (suma, nombre) => suma + valores[nombre], 0
-  ) / nombres.length;
-
+  const media = nombres.reduce((suma, nombre) => suma + valores[nombre], 0) / nombres.length;
   const nasaTLX = Number(media.toFixed(2));
 
   document.getElementById("app").innerHTML = `
@@ -1395,53 +878,34 @@ async function guardarNASA_TLX() {
   }
 }
 
+
 /* ======================================================
    SUS (System Usability Scale)
    ====================================================== */
 
 function mostrarSUS() {
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 
   const preguntas = [
-
     "Creo que utilizaría esta interfaz con frecuencia.",
-
     "Encontré la interfaz innecesariamente compleja.",
-
     "Me pareció fácil utilizar la interfaz.",
-
     "Creo que necesitaría ayuda de una persona técnica para poder utilizar esta interfaz.",
-
     "Los distintos elementos de la interfaz estaban bien integrados.",
-
     "Encontré demasiadas inconsistencias en la interfaz.",
-
     "Creo que la mayoría de las personas aprenderían a utilizar esta interfaz rápidamente.",
-
     "Me pareció muy complicada de utilizar.",
-
     "Me sentí muy seguro/a utilizando la interfaz.",
-
     "Necesitaría aprender muchas cosas antes de poder utilizar esta interfaz."
   ];
 
-   document.getElementById("app").innerHTML = `
+  document.getElementById("app").innerHTML = `
 
-    <h1>
-      Evaluación final
-    </h1>
+    <h1>Evaluación final</h1>
 
     <div class="info-box">
-
-      <p>
-        Para las siguientes preguntas utilizamos exactamente
-        la misma escala:
-      </p>
-
+      <p>Para las siguientes preguntas utilizamos exactamente la misma escala:</p>
       <p style="margin: 0;">
         1 — Totalmente en desacuerdo<br>
         2 — En desacuerdo<br>
@@ -1449,32 +913,16 @@ function mostrarSUS() {
         4 — De acuerdo<br>
         5 — Totalmente de acuerdo
       </p>
-
     </div>
 
-    ${preguntas
-      .map(
-        (pregunta, i) => `
+    ${preguntas.map((pregunta, i) => `
+      <div class="question">
+        <div class="question-title">${i + 1}. ${pregunta}</div>
+        ${crearEscalaSUS("sus_" + (i + 1))}
+      </div>
+    `).join("")}
 
-          <div class="question">
-
-            <div class="question-title">
-              ${i + 1}. ${pregunta}
-            </div>
-
-            ${crearEscalaSUS("sus_" + (i + 1))}
-
-          </div>
-
-        `
-      )
-      .join("")}
-
-    <button
-      onclick="guardarSUS()"
-    >
-      Finalizar estudio
-    </button>
+    <button onclick="guardarSUS()">Finalizar estudio</button>
 
   `;
 }
@@ -1492,18 +940,12 @@ async function guardarSUS() {
       return;
     }
 
-    valores.push(Number(valor));  }
-
-  /*
-   * Cálculo SUS
-   * Preguntas impares: respuesta - 1
-   * Preguntas pares: 5 - respuesta
-   */
+    valores.push(Number(valor));
+  }
 
   let suma = 0;
 
   for (let i = 0; i < 10; i++) {
-
     if (i % 2 === 0) {
       suma += valores[i] - 1;
     } else {
@@ -1548,24 +990,10 @@ async function guardarSUS() {
    FINAL
    ====================================================== */
 
-async function finalizarExperimento() {
+function finalizarExperimento() {
 
   sessionStorage.setItem("experimentoFinalizado", "true");
   history.pushState(null, "", location.href);
-
-  try {
-    await fetch(API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        sessionId: sessionId,
-        estado: "Completado"
-      })
-    });
-  } catch (error) {
-    // No bloqueamos el mensaje de agradecimiento aunque falle
-  }
 
   document.getElementById("app").innerHTML = `
     <h1>Gracias por participar</h1>
@@ -1575,47 +1003,22 @@ async function finalizarExperimento() {
 }
 
 
-window.addEventListener(
-  "popstate",
-  function() {
+window.addEventListener("popstate", function () {
 
-    if (
-      sessionStorage.getItem(
-        "experimentoFinalizado"
-      ) === "true"
-    ) {
-
-      history.pushState(
-        null,
-        "",
-        location.href
-      );
-
-      mostrarFinalBloqueado();
-
-    }
-
+  if (sessionStorage.getItem("experimentoFinalizado") === "true") {
+    history.pushState(null, "", location.href);
+    mostrarFinalBloqueado();
   }
-);
+
+});
 
 function mostrarFinalBloqueado() {
 
   document.getElementById("app").innerHTML = `
-
-    <h1>
-      Gracias por participar
-    </h1>
-
-    <p>
-      Has completado correctamente el estudio.
-    </p>
-
-    <p>
-      Ya puedes cerrar esta página.
-    </p>
-
+    <h1>Gracias por participar</h1>
+    <p>Has completado correctamente el estudio.</p>
+    <p>Ya puedes cerrar esta página.</p>
   `;
-
 }
 
 
@@ -1623,22 +1026,8 @@ function mostrarFinalBloqueado() {
    INICIO
    ====================================================== */
 
-if (
-  sessionStorage.getItem(
-    "experimentoFinalizado"
-  ) === "true"
-) {
-
+if (sessionStorage.getItem("experimentoFinalizado") === "true") {
   mostrarFinalBloqueado();
-
 } else {
-
   mostrarBienvenida();
-
 }
-  
-</script>
-
-</body>
-
-</html>
