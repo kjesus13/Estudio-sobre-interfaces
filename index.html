@@ -274,10 +274,6 @@ function mostrarBienvenida() {
         y aceptas participar en el estudio.
       </p>
 
-      <p>
-        El estudio tiene una duración aproximada de 10 minutos.
-      </p>
-
     </div>
 
     <label class="option">
@@ -562,9 +558,10 @@ function mostrarPuente() {
     </p>
 
     <p>
-      En la elección final no existen respuestas correctas
-      o incorrectas; nos interesa conocer cómo interpretarías
-      la información y qué decisión tomarías en su lugar.
+      Algunas preguntas tienen una respuesta objetiva y otras
+      son de valoración personal; en ningún caso se evalúa
+      tu conocimiento financiero, solo cómo interactúas
+      con la información presentada.
     </p>
 
     <button onclick="comenzarExperimento()">Comenzar</button>
@@ -896,7 +893,7 @@ async function finalizarEscenario(escenario) {
 
   if (boton) {
     boton.disabled = true;
-    boton.textContent = "Guardando...";
+    boton.textContent = "Guardando tus respuestas, no cierres la página...";
   }
 
   const payload = {
